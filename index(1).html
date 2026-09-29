@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Responsive Kanban Task Board with local storage, priorities, search, editing, and task management." />
+  <title>Kanban Task Board</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div>
+        <p class="eyebrow">Task Management</p>
+        <h1>Kanban Task Board</h1>
+        <p class="subtitle">Organize work across To Do, In Progress, and Done.</p>
+      </div>
+      <div class="header-stat" aria-live="polite">
+        <span class="header-stat-label">Total Tasks</span>
+        <strong id="headerTaskCount">0</strong>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="controls-section" aria-labelledby="task-form-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">Create &amp; manage</p>
+          <h2 id="task-form-title">Add a task</h2>
+        </div>
+        <span class="form-mode" id="formMode">New task</span>
+      </div>
+
+      <form id="taskForm" class="task-form" novalidate>
+        <div class="field field-wide">
+          <label for="taskTitle">Task title <span aria-hidden="true">*</span></label>
+          <input id="taskTitle" name="title" type="text" maxlength="80" placeholder="e.g. Design landing page" required />
+          <small class="field-error" id="titleError" role="alert"></small>
+        </div>
+
+        <div class="field">
+          <label for="taskPriority">Priority</label>
+          <select id="taskPriority" name="priority">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+
+        <div class="field field-actions">
+          <label>&nbsp;</label>
+          <div class="button-row">
+            <button class="btn btn-primary" type="submit" id="submitBtn">Add Task</button>
+            <button class="btn btn-secondary hidden" type="button" id="cancelEditBtn">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <section class="toolbar" aria-label="Task tools">
+      <div class="search-wrap">
+        <label class="sr-only" for="searchInput">Search tasks</label>
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input id="searchInput" type="search" placeholder="Search tasks..." autocomplete="off" />
+      </div>
+      <div class="toolbar-meta">
+        <span id="resultSummary">Showing 0 tasks</span>
+        <button class="text-btn" type="button" id="clearSearchBtn">Clear</button>
+      </div>
+    </section>
+
+    <section class="board" aria-label="Kanban task board">
+      <article class="kanban-column status-todo" data-status="todo">
+        <div class="column-header">
+          <div class="column-title-wrap">
+            <span class="status-dot"></span>
+            <h2>To Do</h2>
+          </div>
+          <span class="count-badge" id="todoCount">0</span>
+        </div>
+        <div class="column-dropzone" id="todoList" data-status="todo" role="list" aria-label="To Do tasks"></div>
+      </article>
+
+      <article class="kanban-column status-progress" data-status="progress">
+        <div class="column-header">
+          <div class="column-title-wrap">
+            <span class="status-dot"></span>
+            <h2>In Progress</h2>
+          </div>
+          <span class="count-badge" id="progressCount">0</span>
+        </div>
+        <div class="column-dropzone" id="progressList" data-status="progress" role="list" aria-label="In Progress tasks"></div>
+      </article>
+
+      <article class="kanban-column status-done" data-status="done">
+        <div class="column-header">
+          <div class="column-title-wrap">
+            <span class="status-dot"></span>
+            <h2>Done</h2>
+          </div>
+          <span class="count-badge" id="doneCount">0</span>
+        </div>
+        <div class="column-dropzone" id="doneList" data-status="done" role="list" aria-label="Done tasks"></div>
+      </article>
+    </section>
+
+    <p class="board-hint">Tip: Move a task with the status menu on each card. Your tasks are saved automatically.</p>
+  </main>
+
+  <template id="taskTemplate">
+    <article class="task-card" role="listitem">
+      <div class="task-card-top">
+        <span class="priority-badge"></span>
+        <button class="icon-btn delete-btn" type="button" title="Delete task" aria-label="Delete task">×</button>
+      </div>
+
+      <h3 class="task-title"></h3>
+      <p class="task-date"></p>
+
+      <div class="task-card-bottom">
+        <div class="status-select-wrap">
+          <label class="sr-only status-label">Task status</label>
+          <select class="status-select" aria-label="Change task status">
+            <option value="todo">To Do</option>
+            <option value="progress">In Progress</option>
+            <option value="done">Done</option>
+          </select>
+        </div>
+        <button class="edit-btn" type="button">Edit</button>
+      </div>
+    </article>
+  </template>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
